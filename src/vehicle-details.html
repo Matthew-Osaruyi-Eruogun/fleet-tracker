@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Asset Metrics Deep-Dive</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <h1>⚡ Fleet<span>Ops</span></h1>
+        </div>
+        <nav>
+            <a href="/index.html">Dashboard</a>
+            <a href="/dashboard.html">Management Hub</a>
+        </nav>
+    </header>
+
+    <main class="details-container">
+        <div class="navigation-row">
+            <a href="/index.html" class="back-btn">← Return to Tracking Matrix</a>
+        </div>
+
+        <!-- Target injection node for the JS Engine -->
+        <div id="detailsWorkspace">
+            <p class="loading-msg">Parsing asset parameter parameters and querying ledger...</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 FleetOps Logistics Management System v1.0</p>
+    </footer>
+
+    <!-- Script entry point for details parsing -->
+    <script type="module" src="/js/MaintenanceController.mjs"></script>
+</body>
+
+</html>

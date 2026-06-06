@@ -1,0 +1,73 @@
+[
+    {
+        "vehicleId": "TRK-2026-001",
+        "makeModel": "Toyota Hilux GR Sport",
+        "engineType": "1GR-FE V6",
+        "currentOdometer": 124500,
+        "lastServiceOdometer": 120000,
+        "status": "Active",
+        "importLogistics": null,
+        "operatingExpenses": [
+            {
+                "id": "EXP-101",
+                "description": "Oil Filter Exchange",
+                "cost": 75
+            },
+            {
+                "id": "EXP-102",
+                "description": "Brake Pad Replacement",
+                "cost": 180
+            }
+        ],
+        "assignedDriver": "Francis Macheme"
+    },
+    {
+        "vehicleId": "TRK-2026-002",
+        "makeModel": "Volkswagen Golf 4",
+        "engineType": "2.0L SOHC",
+        "currentOdometer": 198200,
+        "lastServiceOdometer": 191000,
+        "status": "In Service",
+        "importLogistics": null,
+        "operatingExpenses": [
+            {
+                "id": "EXP-201",
+                "description": "Alternator Swap",
+                "cost": 320
+            }
+        ],
+        "assignedDriver": "Unassigned"
+    },
+    {
+        "vehicleId": "TRK-2026-003",
+        "makeModel": "Mercedes-Benz Sprinter Cargo",
+        "engineType": "OM651 Inline-4",
+        "currentOdometer": 0,
+        "lastServiceOdometer": 0,
+        "status": "In Transit",
+        "importLogistics": [
+            {
+                "milestone": "Port Outbound",
+                "reached": true,
+                "date": "2026-05-10"
+            },
+            {
+                "milestone": "Sea Transit",
+                "reached": true,
+                "date": "2026-05-25"
+            },
+            {
+                "milestone": "Customs Cleared",
+                "reached": false,
+                "date": null
+            },
+            {
+                "milestone": "Arrived at Hub",
+                "reached": false,
+                "date": null
+            }
+        ],
+        "operatingExpenses": [],
+        "assignedDriver": "Pending Import Delivery"
+    }
+]
