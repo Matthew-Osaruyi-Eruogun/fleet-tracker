@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics & Fleet Maintenance Tracker</title>
+  <script type="module" crossorigin src="/fleet-tracker/assets/main-CMcxSg_N.js"></script>
+  <link rel="modulepreload" crossorigin href="/fleet-tracker/assets/style-K1H9ttuL.js">
+  <link rel="stylesheet" crossorigin href="/fleet-tracker/assets/style-CWlpj2Qm.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <!-- High-visibility industrial branding -->
+            <h1>⚡ Fleet<span>Ops</span></h1>
+        </div>
+        <nav>
+            <a href="/index.html" class="active">Dashboard</a>
+            <a href="/dashboard.html">Management Hub</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Live Fleet Overview Controls -->
+        <section class="controls-panel">
+            <h2>Fleet Overview Control Panel</h2>
+            <div class="search-filter-row">
+                <input type="text" id="fleetSearch" placeholder="Search by ID, model, or driver...">
+
+                <select id="statusFilter">
+                    <option value="all">All Vehicles</option>
+                    <option value="Active">Active</option>
+                    <option value="In Service">In Service</option>
+                    <option value="In Transit">In Transit</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Visual Landing Grid for Vehicles -->
+        <section class="grid-container">
+            <h3>Active Tracking Matrix</h3>
+            <div id="fleetGrid" class="fleet-grid">
+                <!-- Dynamic JS-rendered cards will load right here -->
+                <p class="loading-msg">Initializing tracking matrix components...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 FleetOps Logistics Management System System v1.0</p>
+    </footer>
+
+    <!-- Link your primary modern module logic -->
+</body>
+
+</html>

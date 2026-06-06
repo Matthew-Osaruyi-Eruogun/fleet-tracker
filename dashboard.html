@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleetOps Management Hub</title>
+  <script type="module" crossorigin src="/fleet-tracker/assets/dashboard-D8E4buSC.js"></script>
+  <link rel="modulepreload" crossorigin href="/fleet-tracker/assets/style-K1H9ttuL.js">
+  <link rel="stylesheet" crossorigin href="/fleet-tracker/assets/style-CWlpj2Qm.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo-container">
+            <h1>⚡ Fleet<span>Ops</span></h1>
+        </div>
+        <nav>
+            <a href="/index.html">Dashboard</a>
+            <a href="/dashboard.html" class="active">Management Hub</a>
+        </nav>
+    </header>
+
+    <main class="management-container">
+        <h2>Operational Management Hub</h2>
+        <p class="hub-subtitle">Log active mileage updates and administrative resource outlays.</p>
+
+        <div class="management-grid">
+            <!-- Form 1: Mileage Logging Matrix -->
+            <section class="form-card">
+                <h3>Update Vehicle Mileage</h3>
+                <form id="mileageForm">
+                    <div class="form-group">
+                        <label for="mileageVehicleSelect">Select Target Vehicle Asset</label>
+                        <select id="mileageVehicleSelect" required>
+                            <option value="" disabled selected>Loading assets...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newOdometer">New Odometer Reading (km)</label>
+                        <input type="number" id="newOdometer" min="1" placeholder="e.g. 126000" required>
+                    </div>
+                    <button type="submit" class="action-btn amber-btn">Log Mileage Update</button>
+                </form>
+                <div id="mileageFeedback" class="form-feedback"></div>
+            </section>
+
+            <!-- Form 2: Operating Expense Ledger Logger -->
+            <section class="form-card">
+                <h3>Log Operational Expense</h3>
+                <form id="expenseForm">
+                    <div class="form-group">
+                        <label for="expenseVehicleSelect">Select Target Vehicle Asset</label>
+                        <select id="expenseVehicleSelect" required>
+                            <option value="" disabled selected>Loading assets...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseDesc">Expense Description</label>
+                        <input type="text" id="expenseDesc" placeholder="e.g. Premium Tyres Replacement" required>
+                    </div>
+                    <!-- INTERACTIVE DATE PICKER CONTROL -->
+                    <div class="form-group">
+                        <label for="expenseDate">Service / Maintenance Date</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expenseCost">Total Financial Cost ($ USD)</label>
+                        <input type="number" id="expenseCost" min="1" placeholder="e.g. 450" required>
+                    </div>
+                    <button type="submit" class="action-btn green-btn">Commit Expense Entry</button>
+                </form>
+                <div id="expenseFeedback" class="form-feedback"></div>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 FleetOps Logistics Management System v1.0</p>
+    </footer>
+
+</body>
+
+</html>
