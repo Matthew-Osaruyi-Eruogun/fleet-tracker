@@ -1,50 +1,11 @@
-// src/js/fleetlist.mjs
-export default class FleetList { // Renamed and exported perfectly
-    constructor(dataSource, targetGridId) { // Added targetGridId to match utils.mjs
+export default class FleetList { 
+    constructor(dataSource, targetGridId) { 
         this.dataSource = dataSource;
-        this.gridElement = document.getElementById(targetGridId);
+        this.gridElement = document.getElementById(targetGridId); 
         this.vehicles = [];
     }
 
-    // Attach real-time event listeners to filtering controls
-    setupFilters(searchId, filterId) {
-        const searchInput = document.getElementById(searchId);
-        const statusSelect = document.getElementById(filterId);
-
-        // Unified execution loop for both input channels
-        const executeFilter = () => {
-            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-            const selectedStatus = statusSelect ? statusSelect.value : 'all';
-
-            // Filter the master array without mutating the original dataset
-            const filteredSubset = this.vehicles.filter(vehicle => {
-                // Evaluation 1: Detailed Text Search Matching
-                const matchesSearch =
-                    vehicle.vehicleId.toLowerCase().includes(query) ||
-                    vehicle.makeModel.toLowerCase().includes(query) ||
-                    vehicle.assignedDriver.toLowerCase().includes(query);
-
-                // Evaluation 2: Dropdown Deployment State Matching
-                const matchesStatus = (selectedStatus === 'all') || (vehicle.status === selectedStatus);
-
-                // Both conditions must pass for the vehicle card to remain visible
-                return matchesSearch && matchesStatus;
-            });
-
-            // Push the compiled matrix array back to the view layer
-            this.render(filteredSubset);
-        };
-
-        // Bind execution contexts to respective DOM event triggers
-        if (searchInput) {
-            searchInput.addEventListener('input', executeFilter);
-        }
-        if (statusSelect) {
-            statusSelect.addEventListener('change', executeFilter);
-        }
-    }
-
-    // Fetch the mock asset data array
+   
     async init() {
         try {
             const response = await fetch(this.dataSource);
@@ -53,52 +14,114 @@ export default class FleetList { // Renamed and exported perfectly
             }
             this.vehicles = await response.json();
             this.render(this.vehicles);
-            return true; // Resolves promise to let setupFilters execute safely
+            return true; 
         } catch (error) {
             console.error("Initialization failed mapping fleet array:", error);
-            if (this.targetElement) {
-                this.targetElement.innerHTML = `<p class="error-msg">Error loading tracking matrix data components.</p>`;
+            if (this.gridElement) {
+                this.gridElement.innerHTML = `<p class="feedback-error">Error loading tracking matrix data components.</p>`;
             }
             return false;
         }
     }
 
-    // Generate individual vehicle template markups
+
     vehicleCardTemplate(vehicle) {
-        // Basic structural status color selector
+        // Base structural status styling markers
         let statusClass = "status-active";
         if (vehicle.status === "In Service") statusClass = "status-service";
         if (vehicle.status === "In Transit") statusClass = "status-transit";
 
+        // Build dynamic display metadata contexts safely
+        const displayOdometer = vehicle.status === "In Transit" ? "Not Applicable" : `${vehicle.currentOdometer.toLocaleString()} km`;
+        const displayDriver = vehicle.assignedDriver || "Unassigned";
+
+        // --- PROACTIVE MAINTENANCE ALERT WIDGET SYSTEM ---
+        let alertBannerHTML = '';
+        const MAINTENANCE_THRESHOLD = 5000; // 5,000 km limit
+        
+        if (vehicle.status !== "In Transit") {
+            const mileageDelta = vehicle.currentOdometer - vehicle.lastServiceOdometer;
+            
+            if (mileageDelta >= MAINTENANCE_THRESHOLD) {
+                alertBannerHTML = `
+                    <div class="maintenance-alert alert-active">
+                        ⚠️ WARNING: Service Overdue by ${(mileageDelta - MAINTENANCE_THRESHOLD).toLocaleString()} km!
+                    </div>
+                `;
+            } else {
+                alertBannerHTML = `
+                    <div class="maintenance-alert alert-nominal">
+                        ✅ Status: Nominal (${(MAINTENANCE_THRESHOLD - mileageDelta).toLocaleString()} km remaining)
+                    </div>
+                `;
+            }
+        }
+
+       
         return `
-            <div class="vehicle-card" data-id="${vehicle.vehicleId}">
-                <div class="card-header">
-                    <h4>${vehicle.vehicleId}</h4>
+            <article class="vehicle-card" data-id="${vehicle.vehicleId}">
+                <header class="card-header">
+                    <h4>${vehicle.makeModel}</h4>
                     <span class="status-badge ${statusClass}">${vehicle.status}</span>
-                </div>
+                </header>
+                
+                ${alertBannerHTML}
+
                 <div class="card-body">
-                    <p><strong>Model:</strong> ${vehicle.makeModel}</p>
-                    <p><strong>Engine:</strong> ${vehicle.engineType}</p>
-                    <p><strong>Odometer:</strong> ${vehicle.currentOdometer.toLocaleString()} km</p>
-                    <p><strong>Driver:</strong> ${vehicle.assignedDriver}</p>
+                    <p><strong>Asset ID:</strong> <code>${vehicle.vehicleId}</code></p>
+                    <p><strong>Powertrain:</strong> ${vehicle.engineType}</p>
+                    <p><strong>Current Log:</strong> ${displayOdometer}</p>
+                    <p><strong>Driver Assignee:</strong> ${displayDriver}</p>
                 </div>
                 <div class="card-footer">
-                    <a href="/vehicle-details.html?id=${vehicle.vehicleId}" class="view-details-btn">View Full Metrics</a>
+                    <a href="./vehicle-details.html?id=${vehicle.vehicleId}" class="view-details-btn">View Metrics Deep-Dive →</a>
                 </div>
-            </div>
+            </article>
         `;
     }
 
-    // Render arrays cleanly to the screen
+
     render(list) {
-        if (!this.targetElement) return;
+        if (!this.gridElement) return;
 
         if (list.length === 0) {
-            this.targetElement.innerHTML = `<p class="no-results">No vehicle units match your search filters.</p>`;
+            this.gridElement.innerHTML = `<p class="loading-msg">No active fleet parameters match your search filters.</p>`;
             return;
         }
 
         const htmlStrings = list.map(vehicle => this.vehicleCardTemplate(vehicle));
-        this.targetElement.innerHTML = htmlStrings.join('');
+        this.gridElement.innerHTML = htmlStrings.join('');
+    }
+
+   
+    setupFilters(searchId, filterId) {
+        const searchInput = document.getElementById(searchId);
+        const statusSelect = document.getElementById(filterId);
+
+        const executeFilter = () => {
+            const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+            const selectedStatus = statusSelect ? statusSelect.value : 'all';
+
+            const filteredSubset = this.vehicles.filter(vehicle => {
+                // Secure text properties against null crashes safely
+                const targetId = vehicle.vehicleId ? vehicle.vehicleId.toLowerCase() : '';
+                const targetModel = vehicle.makeModel ? vehicle.makeModel.toLowerCase() : '';
+                const targetDriver = vehicle.assignedDriver ? vehicle.assignedDriver.toLowerCase() : '';
+
+                const matchesSearch =
+                    targetId.includes(query) ||
+                    targetModel.includes(query) ||
+                    targetDriver.includes(query);
+
+                const matchesStatus = (selectedStatus === 'all') || (vehicle.status === selectedStatus);
+
+                return matchesSearch && matchesStatus;
+            });
+
+            this.render(filteredSubset);
+        };
+
+        if (searchInput) searchInput.addEventListener('input', executeFilter);
+        if (statusSelect) statusSelect.addEventListener('change', executeFilter);
     }
 }
