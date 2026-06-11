@@ -1,4 +1,4 @@
-import FleetList from './FleetList.mjs';
+import FleetList from './fleetlistrenderer.mjs';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Pull from local cache if it exists, otherwise use standard JSON fallback

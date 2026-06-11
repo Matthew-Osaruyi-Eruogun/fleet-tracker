@@ -1,7 +1,8 @@
-export default class FleetList {
-    constructor(dataSource, targetElementId) {
+// src/js/fleetlist.mjs
+export default class FleetList { // Renamed and exported perfectly
+    constructor(dataSource, targetGridId) { // Added targetGridId to match utils.mjs
         this.dataSource = dataSource;
-        this.targetElement = document.getElementById(targetElementId);
+        this.gridElement = document.getElementById(targetGridId);
         this.vehicles = [];
     }
 
