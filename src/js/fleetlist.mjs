@@ -1,5 +1,3 @@
-// src/js/FleetList.mjs
-
 export default class FleetList {
     constructor(dataSource, targetGridId) {
         this.dataSource = dataSource;
@@ -25,7 +23,7 @@ export default class FleetList {
     }
 
     /**
-     * Builds responsive asset visual display components dynamically 
+     * Builds responsive asset visual display components dynamically with Proactive Alerts
      */
     render(fleetData) {
         if (!this.gridElement) return;
@@ -36,21 +34,44 @@ export default class FleetList {
         }
 
         this.gridElement.innerHTML = fleetData.map(v => {
-            // Determine structural status styling markers
             let badgeClass = 'status-active';
             if (v.status === 'In Service') badgeClass = 'status-service';
             if (v.status === 'In Transit') badgeClass = 'status-transit';
 
-            // Build dynamic display metadata contexts safely
             const displayOdometer = v.status === "In Transit" ? "Not Applicable" : `${v.currentOdometer.toLocaleString()} km`;
             const displayDriver = v.assignedDriver || "Unassigned";
 
+            // --- PROACTIVE MAINTENANCE ALERT WIDGET SYSTEM ---
+            let alertBannerHTML = '';
+            const MAINTENANCE_THRESHOLD = 5000; // 5,000 km mileage limit
+
+            if (v.status !== "In Transit") {
+                const mileageDelta = v.currentOdometer - v.lastServiceOdometer;
+
+                if (mileageDelta >= MAINTENANCE_THRESHOLD) {
+                    alertBannerHTML = `
+                        <div class="maintenance-alert alert-active" style="background-color: #721c24; color: #f8d7da; padding: 6px 10px; margin: 8px 0; border-radius: 4px; font-size: 0.85rem; font-weight: bold; border-left: 4px solid #dc3545;">
+                            ⚠️ WARNING: Service Overdue by ${(mileageDelta - MAINTENANCE_THRESHOLD).toLocaleString()} km!
+                        </div>
+                    `;
+                } else {
+                    alertBannerHTML = `
+                        <div class="maintenance-alert alert-nominal" style="background-color: #155724; color: #d4edda; padding: 6px 10px; margin: 8px 0; border-radius: 4px; font-size: 0.85rem; border-left: 4px solid #28a745;">
+                            ✅ Status: Nominal (${(MAINTENANCE_THRESHOLD - mileageDelta).toLocaleString()} km remaining)
+                        </div>
+                    `;
+                }
+            }
+
             return `
-                <article class="vehicle-card">
+                <article class="vehicle-card" data-id="${v.vehicleId}">
                     <header class="card-header">
                         <h4>${v.makeModel}</h4>
                         <span class="status-badge ${badgeClass}">${v.status}</span>
                     </header>
+                    
+                    ${alertBannerHTML}
+
                     <div class="card-body">
                         <p><strong>Asset ID:</strong> <code>${v.vehicleId}</code></p>
                         <p><strong>Powertrain:</strong> ${v.engineType}</p>
@@ -66,7 +87,7 @@ export default class FleetList {
     }
 
     /**
-     * Attaches interactive keyup and selector input filter query mechanics
+     * Attaches interactive input and selector filter query mechanics safely
      */
     setupFilters(searchId, filterDropdownId) {
         const searchInput = document.getElementById(searchId);
@@ -77,11 +98,14 @@ export default class FleetList {
             const statusCriteria = statusFilter ? statusFilter.value : 'all';
 
             const filteredResults = this.vehicles.filter(v => {
-                // Match criteria against primary string data
+                const targetId = v.vehicleId ? v.vehicleId.toLowerCase() : '';
+                const targetModel = v.makeModel ? v.makeModel.toLowerCase() : '';
+                const targetDriver = v.assignedDriver ? v.assignedDriver.toLowerCase() : '';
+
                 const matchesSearch =
-                    v.vehicleId.toLowerCase().includes(query) ||
-                    v.makeModel.toLowerCase().includes(query) ||
-                    (v.assignedDriver && v.assignedDriver.toLowerCase().includes(query));
+                    targetId.includes(query) ||
+                    targetModel.includes(query) ||
+                    targetDriver.includes(query);
 
                 const matchesStatus = statusCriteria === 'all' || v.status === statusCriteria;
 
@@ -91,7 +115,6 @@ export default class FleetList {
             this.render(filteredResults);
         };
 
-        // Connect functional listeners to physical user interfaces
         searchInput?.addEventListener('input', executeFilterLogic);
         statusFilter?.addEventListener('change', executeFilterLogic);
     }

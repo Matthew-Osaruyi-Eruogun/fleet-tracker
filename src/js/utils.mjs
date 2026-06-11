@@ -1,22 +1,27 @@
-import FleetList from './fleetlistrenderer.mjs';
+import FleetList from './fleetlist.mjs'; // Synchronized file reference
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Pull from local cache if it exists, otherwise use standard JSON fallback
     const cachedData = localStorage.getItem('fleet_data');
-    const dataPath = cachedData ? 'DATA_ALREADY_CACHED' : '/json/fleet.json';
     const targetGridId = 'fleetGrid';
 
-    const fleetTracker = new FleetList(dataPath, targetGridId);
+    // Use a clean relative path for Vite asset pipelines
+    const defaultJsonPath = './json/fleet.json';
 
-    if (dataPath === 'DATA_ALREADY_CACHED') {
+    const fleetTracker = new FleetList(defaultJsonPath, targetGridId);
+
+    if (cachedData) {
+        // If local cache exists, seed the dataset directly and skip network load
         fleetTracker.vehicles = JSON.parse(cachedData);
         fleetTracker.render(fleetTracker.vehicles);
     } else {
+        // Fetch original JSON assets safely if uninitialized
         await fleetTracker.init();
-        // Cache original JSON assets locally for instant access across hub switches
-        localStorage.setItem('fleet_data', JSON.stringify(fleetTracker.vehicles));
+        if (fleetTracker.vehicles.length > 0) {
+            localStorage.setItem('fleet_data', JSON.stringify(fleetTracker.vehicles));
+        }
     }
 
+    // Attach search and status dropdown tracking filters
     fleetTracker.setupFilters('fleetSearch', 'statusFilter');
 
     // Append Developer Tools Reset Cache System Component
@@ -31,7 +36,6 @@ function injectSystemResetButton() {
     resetBtn.id = 'devCacheResetBtn';
     resetBtn.innerHTML = '🔄 Reset Demo Cache';
 
-    // Explicit inline layouts to keep styling configurations self-contained within the utility layer
     resetBtn.style.position = 'fixed';
     resetBtn.style.bottom = '20px';
     resetBtn.style.right = '20px';
@@ -47,7 +51,6 @@ function injectSystemResetButton() {
     resetBtn.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.6)';
     resetBtn.style.transition = 'background-color 0.2s ease, border-color 0.2s ease';
 
-    // Interactive hover feedback bindings
     resetBtn.addEventListener('mouseenter', () => {
         resetBtn.style.backgroundColor = '#262626';
         resetBtn.style.borderColor = 'var(--safety-amber, #ffb300)';
@@ -57,7 +60,6 @@ function injectSystemResetButton() {
         resetBtn.style.borderColor = 'var(--border-color, #333)';
     });
 
-    // Storage clearing handler execution sequence
     resetBtn.addEventListener('click', () => {
         if (confirm('Reset system data layers? This action clears all localized odometer history logs and resets the configuration matrices back to default templates.')) {
             localStorage.removeItem('fleet_data');
