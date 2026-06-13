@@ -1,25 +1,7 @@
 export default class FleetList {
-    constructor(dataSource, targetGridId) {
-        this.dataSource = dataSource;
+    constructor(targetGridId) {
         this.gridElement = document.getElementById(targetGridId);
         this.vehicles = [];
-    }
-
-    /**
-     * Fetch original configuration metrics if storage layer is uninitialized
-     */
-    async init() {
-        try {
-            const response = await fetch(this.dataSource);
-            if (!response.ok) throw new Error(`HTTP stream status failed: ${response.status}`);
-            this.vehicles = await response.json();
-            this.render(this.vehicles);
-        } catch (error) {
-            console.error("Critical error loading inventory matrix source streams:", error);
-            if (this.gridElement) {
-                this.gridElement.innerHTML = `<p class="feedback-error">Failed to synchronize active tracking systems.</p>`;
-            }
-        }
     }
 
     /**
