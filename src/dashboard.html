@@ -22,7 +22,8 @@
 
     <main class="management-container">
         <h2>Operational Management Hub</h2>
-        <p class="hub-subtitle">Log active mileage updates and administrative resource outlays.</p>
+        <p class="hub-subtitle">Log active mileage updates, administrative resource outlays, and register new assets.
+        </p>
 
         <div class="management-grid">
             <!-- Form 1: Mileage Logging Matrix -->
@@ -70,6 +71,51 @@
                     <button type="submit" class="action-btn green-btn">Commit Expense Entry</button>
                 </form>
                 <div id="expenseFeedback" class="form-feedback"></div>
+            </section>
+
+            <!-- Form 3: Persistent Vehicle Profile Creator -->
+            <section class="form-card">
+                <h3>Register New Fleet Asset</h3>
+                <form id="registerAssetForm">
+                    <div class="form-group">
+                        <label for="newVehicleId">Unique Asset ID</label>
+                        <input type="text" id="newVehicleId" placeholder="e.g. TRK-2026-004" required
+                            style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label for="newMakeModel">Manufacturer & Model</label>
+                        <input type="text" id="newMakeModel" placeholder="e.g. Toyota Land Cruiser ZX" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEngineType">Engine Configuration</label>
+                        <input type="text" id="newEngineType" placeholder="e.g. V35A-FTS 3.4L Twin-Turbo" required>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div class="form-group">
+                            <label for="newCurrentOdometer">Odometer (km)</label>
+                            <input type="number" id="newCurrentOdometer" min="0" placeholder="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newLastServiceOdometer">Last Service (km)</label>
+                            <input type="number" id="newLastServiceOdometer" min="0" placeholder="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newAssetStatus">Deployment Status</label>
+                        <select id="newAssetStatus" required>
+                            <option value="Active">Active</option>
+                            <option value="In Service">In Service</option>
+                            <option value="In Transit">In Transit</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newAssignedDriver">Assigned Operations Driver</label>
+                        <input type="text" id="newAssignedDriver" placeholder="e.g. Francis Macheme" required>
+                    </div>
+                    <button type="submit" class="action-btn dynamic-blue-btn"
+                        style="background-color: #007bff; color: white;">Commit New Asset Profile</button>
+                </form>
+                <div id="registerFeedback" class="form-feedback"></div>
             </section>
         </div>
     </main>
